@@ -64,7 +64,7 @@ void init()
 JPClass* findClass(const JPTypeName& name)
 {
 	// Fist check in the map ...
-	JavaClassMap::iterator cur = javaClassMap.find(name.getSimpleName());
+	auto cur = javaClassMap.find(name.getSimpleName());
 	
 	if (cur != javaClassMap.end())
 	{
@@ -76,11 +76,11 @@ JPClass* findClass(const JPTypeName& name)
 
 	// No we havent got it .. lets load it!!!
 	JPLocalFrame frame;
-	if (JPEnv::getJava()==0)
-		return 0;
+	if (JPEnv::getJava()== nullptr)
+		return nullptr;
 
 	jclass cls = JPEnv::getJava()->FindClass(name.getNativeName().c_str());
-	JPClass* res = new JPClass(name, cls);
+	auto * res = new JPClass(name, cls);
 	
 	// Register it here before we do anything else
 	javaClassMap[name.getSimpleName()] = res;
@@ -95,7 +95,7 @@ JPClass* findClass(const JPTypeName& name)
 JPArrayClass* findArrayClass(const JPTypeName& name)
 {
 	// Fist check in the map ...
-	JavaArrayClassMap::iterator cur = javaArrayClassMap.find(name.getSimpleName());
+	auto cur = javaArrayClassMap.find(name.getSimpleName());
 	
 	if (cur != javaArrayClassMap.end())
 	{
@@ -105,7 +105,7 @@ JPArrayClass* findArrayClass(const JPTypeName& name)
 	// No we havent got it .. lets load it!!!
 	JPLocalFrame frame;
 	jclass cls = JPEnv::getJava()->FindClass(name.getNativeName().c_str());
-	JPArrayClass* res = new JPArrayClass(name, cls);
+	auto * res = new JPArrayClass(name, cls);
 	
 	// Register it here before we do anything else
 	javaArrayClassMap[name.getSimpleName()] = res;
@@ -117,7 +117,7 @@ JPType* getType(const JPTypeName& t)
 {
 	TRACE_IN("JPTypeManager::getType");
 	TRACE1(t.getSimpleName());
-	map<JPTypeName::ETypes, JPType*>::iterator it = typeMap.find(t.getType());
+	auto it = typeMap.find(t.getType());
 	
 	if (it != typeMap.end())
 	{
@@ -142,23 +142,19 @@ void shutdown()
 	flushCache();
 
 	// delete primitive types
-	for(TypeMap::iterator i = typeMap.begin(); i != typeMap.end(); ++i)
-	{
-		delete i->second;
+	for (auto &i : typeMap) {
+		delete i.second;
 	}
 }
 
 void flushCache()
 {
-	for(JavaClassMap::iterator i = javaClassMap.begin(); i != javaClassMap.end(); ++i)
-	{
-		delete i->second;
+	for (auto &i : javaClassMap) {
+		delete i.second;
 	}
 
-	for(JavaArrayClassMap::iterator i = javaArrayClassMap.begin();
-			i != javaArrayClassMap.end(); ++i)
-	{
-		delete i->second;
+	for (auto &i : javaArrayClassMap) {
+		delete i.second;
 	}
 
 	javaClassMap.clear();

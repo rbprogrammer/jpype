@@ -29,7 +29,7 @@ PyObject* convertToJValue(PyObject* self, PyObject* arg)
 	if (! JPEnv::isInitialized())
 	{
 		PyErr_SetString(PyExc_RuntimeError, "Java Subsystem not started");
-		return NULL;
+		return nullptr;
 	}
 	JPLocalFrame frame;
 
@@ -64,7 +64,7 @@ PyObject* convertToJValue(PyObject* self, PyObject* arg)
 	}
 	PY_STANDARD_CATCH
 
-	return NULL;
+	return nullptr;
 }
 
 PyObject* JPypeJavaProxy::createProxy(PyObject*, PyObject* arg)
@@ -87,14 +87,14 @@ PyObject* JPypeJavaProxy::createProxy(PyObject*, PyObject* arg)
 			cleaner.add(new HostRef(subObj, false));
 
 			PyObject* claz = JPyObject::getAttrString(subObj, "__javaclass__");
-			PyJPClass* c = (PyJPClass*)claz;
+            auto * c = (PyJPClass*)claz;
 			jclass jc = c->m_Class->getClass();
 			interfaces.push_back(jc);
 		}
 		
 		HostRef ref = HostRef(self);
 
-		JPProxy* proxy = new JPProxy(&ref, interfaces);
+        auto * proxy = new JPProxy(&ref, interfaces);
 
 		PyObject* res = JPyCObject::fromVoidAndDesc(proxy, "jproxy", PythonHostEnvironment::deleteJPProxyDestructor);
 
@@ -102,7 +102,7 @@ PyObject* JPypeJavaProxy::createProxy(PyObject*, PyObject* arg)
 	}
 	PY_STANDARD_CATCH
 
-	return NULL;
+	return nullptr;
 }
 
 static PyMethodDef jpype_methods[] = 

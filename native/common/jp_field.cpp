@@ -1,5 +1,5 @@
 /*****************************************************************************
-   Copyright 2004 Steve Ménard
+   Copyright 2004 Steve Mï¿½nard
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 
 JPField::JPField() :
     m_Name(""),
-    m_Class(NULL),
+    m_Class(nullptr),
     m_IsStatic(false),
     m_IsFinal(false),
     m_Field(),
-    m_FieldID(NULL),
+    m_FieldID(nullptr),
     m_Type()
 {
 }

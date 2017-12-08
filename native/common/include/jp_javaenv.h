@@ -1,5 +1,5 @@
 /*****************************************************************************
-   Copyright 2004 Steve Ménard
+   Copyright 2004 Steve Mï¿½nard
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,19 +26,20 @@ public :
 	JavaException(const char* msg, const char* f, int l) : file(f), line(l) {message = msg;}
 	JavaException(const JavaException& ex) : file(ex.file), line(ex.line) {message = ex.message;}
 
-	virtual ~JavaException() {}
+	virtual ~JavaException() = default;
 
 	const char* file;
 	int line;
 
-	string message;
+	string message{};
 };
 
 class HostException
 {
 public :
-	HostException() {}
-	virtual ~HostException() {}
+	HostException() = default;
+
+	virtual ~HostException() = default;
 
 	virtual const char* getFile() { return "";}
 	virtual int getLine() {return 0;}
@@ -52,7 +53,7 @@ public :
 class JPPlatformAdapter
 {
 public :
-	virtual ~JPPlatformAdapter() {};
+	virtual ~JPPlatformAdapter() = default;;
 	virtual void loadLibrary(const char* path) = 0;
 	virtual void unloadLibrary() = 0;
 	virtual void* getSymbol(const char* name)= 0;
@@ -64,23 +65,23 @@ public :
 class JPJavaEnv
 {
 public :
-	JPJavaEnv(JavaVM* vm) :
+	explicit JPJavaEnv(JavaVM* vm) :
 		jvm(vm),
 		referenceQueue(NULL),
 		convertStringObjects(true)
 	{
 	}	
 
-	virtual ~JPJavaEnv() {}
-	
+	virtual ~JPJavaEnv() = default;
+
 private :
 	static JPPlatformAdapter* GetAdapter();
 //	static JPPlatformAdapter* adapter;
 	static jint (JNICALL *CreateJVM_Method)(JavaVM **pvm, void **penv, void *args);
 	static jint (JNICALL *GetCreatedJVMs_Method)(JavaVM **pvm, jsize size, jsize* nVms);
 
-	JavaVM* jvm;
-	jobject referenceQueue;
+	JavaVM* jvm{};
+	jobject referenceQueue{};
 	bool convertStringObjects;
 
 	JNIEnv* getJNIEnv();

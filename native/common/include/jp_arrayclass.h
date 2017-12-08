@@ -1,5 +1,5 @@
 /*****************************************************************************
-   Copyright 2004 Steve Ménard
+   Copyright 2004 Steve Mï¿½nard
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public :
 	virtual~ JPArrayClass();
 
 public : // JPType implementation
-	virtual HostRef*    asHostObject(jvalue val);
+	virtual py::object    asHostObject(jvalue val);
 	virtual EMatchType  canConvertToJava(HostRef* obj);
 	virtual jvalue      convertToJava(HostRef* obj);
 	virtual jvalue      convertToJavaVector(vector<HostRef*>& refs, size_t start, size_t end);

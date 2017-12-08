@@ -31,7 +31,7 @@ class JPLocalFrame
 	bool popped;
 public:
 	/** Create a new local frame with a minimum number of entries */
-	JPLocalFrame(int i=LOCAL_FRAME_DEFAULT);
+	explicit JPLocalFrame(int i=LOCAL_FRAME_DEFAULT);
 
 	/** Exit the local frame and keep a local reference to an object */
 	jobject keep(jobject);

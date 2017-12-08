@@ -24,8 +24,8 @@
 #include <Python.h>
 
 namespace { // impl details
-	 HostEnvironment* s_Host = NULL;
-	 JPJavaEnv*       s_Java = NULL;
+	 HostEnvironment* s_Host = nullptr;
+	 JPJavaEnv*       s_Java = nullptr;
 }
 
 JPJavaEnv* JPEnv::getJava()
@@ -39,7 +39,7 @@ HostEnvironment* JPEnv::getHost()
 
 bool JPEnv::isInitialized()
 {
-	return getJava() != NULL && getHost() != NULL;
+	return getJava() != nullptr && getHost() != nullptr;
 }
 
 void JPEnv::init(HostEnvironment* hostEnv)
@@ -53,8 +53,8 @@ void JPEnv::loadJVM(const string& vmPath, char ignoreUnrecognized, const StringV
 {
 	TRACE_IN("JPEnv::loadJVM");
 	
-	JavaVMInitArgs jniArgs;
-	jniArgs.options = NULL;
+	JavaVMInitArgs jniArgs{};
+	jniArgs.options = nullptr;
 	
 	JPJavaEnv::load(vmPath);
 
@@ -74,7 +74,7 @@ void JPEnv::loadJVM(const string& vmPath, char ignoreUnrecognized, const StringV
 	s_Java = JPJavaEnv::CreateJavaVM((void*)&jniArgs);
 	free(jniArgs.options);
     
-	if (s_Java == NULL) {
+	if (s_Java == nullptr) {
 		RAISE(JPypeException, "Unable to start JVM");
 	}
 
@@ -93,7 +93,7 @@ void JPEnv::attachJVM(const string& vmPath)
 
 	s_Java = JPJavaEnv::GetCreatedJavaVM(); 
 	
-	if (s_Java == NULL) {
+	if (s_Java == nullptr) {
 		RAISE(JPypeException, "Unable to attach to JVM");
 	}
 
@@ -208,13 +208,12 @@ JPLocalFrame::~JPLocalFrame()
 {
 	if (!popped)
 	{
-		JPEnv::getJava()->PopLocalFrame(NULL);
+		JPEnv::getJava()->PopLocalFrame(nullptr);
 	}
 }
 
 JPCleaner::JPCleaner()
-{
-}
+= default;
 
 JPCleaner::~JPCleaner()
 {
@@ -223,9 +222,8 @@ JPCleaner::~JPCleaner()
 
 //AT's comments on porting:
 // A variety of Unix compilers do not allow redefinition of the same variable in "for" cycles
-	for (vector<HostRef*>::iterator cur2 = m_HostObjects.begin(); cur2 != m_HostObjects.end(); cur2++)
-	{
-		(*cur2)->release();
+	for (auto &m_HostObject : m_HostObjects) {
+		m_HostObject->release();
 	}
 
 	PyGILState_Release(state);
@@ -238,7 +236,7 @@ void JPCleaner::add(HostRef* obj)
 
 void JPCleaner::remove(HostRef* obj)
 {
-	for (vector<HostRef*>::iterator cur2 = m_HostObjects.begin(); cur2 != m_HostObjects.end(); cur2++)
+	for (auto cur2 = m_HostObjects.begin(); cur2 != m_HostObjects.end(); cur2++)
 	{
 		if (*cur2 == obj)
 		{
@@ -255,9 +253,8 @@ void JPCleaner::addAll(vector<HostRef*>& r)
 
 void JPCleaner::removeAll(vector<HostRef*>& r)
 {
-	for (vector<HostRef*>::iterator cur = r.begin(); cur != r.end(); cur++)
-	{
-		remove(*cur);
+	for (auto &cur : r) {
+		remove(cur);
 	}
 }
 
@@ -354,10 +351,10 @@ JCharString::JCharString(size_t len)
 
 JCharString::~JCharString()
 {
-	if (m_Value != NULL)
-	{
-		delete[] m_Value;
-	}
+
+
+	delete[] m_Value;
+
 }
 	
 const jchar* JCharString::c_str()

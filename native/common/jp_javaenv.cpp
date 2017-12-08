@@ -67,7 +67,7 @@ TRACE_OUT;
 
 void JPJavaEnv::shutdown()
 {
-	jvm = NULL;
+	jvm = nullptr;
 	// unload the jvm library
 	GetAdapter()->unloadLibrary();
 }
@@ -101,21 +101,21 @@ JPJavaEnv* JPJavaEnv::GetCreatedJavaVM()
 	return new JPJavaEnv(vm);
 	TRACE_OUT;
 	*/
-	return NULL;
+	return nullptr;
 }
 
 JPJavaEnv* JPJavaEnv::CreateJavaVM(void* arg)
 {
 	TRACE_IN("JPJavaEnv::CreateJavaVM");
 
-	JavaVM* vm = NULL;
+	JavaVM* vm = nullptr;
 	void* env; 
 	
 
 	CreateJVM_Method(&vm, &env, arg);
-	if (vm == NULL)
+	if (vm == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 	
 	TRACE1("A");
@@ -125,12 +125,12 @@ JPJavaEnv* JPJavaEnv::CreateJavaVM(void* arg)
 
 int JPJavaEnv::DestroyJavaVM()
 {
-	if (jvm != NULL)
+	if (jvm != nullptr)
 	{
 		int res = jvm->functions->DestroyJavaVM(jvm);
 		if (res == 0)
 		{
-			jvm = NULL;
+			jvm = nullptr;
 		}
 	}
 	return 0;
@@ -139,7 +139,7 @@ int JPJavaEnv::DestroyJavaVM()
 jint JPJavaEnv::PushLocalFrame(jint i)
 {
   JNIEnv* env = getJNIEnv();
-	if (env != NULL)
+	if (env != nullptr)
 	{
 		return env->functions->PushLocalFrame(env, i);
 	}
@@ -149,11 +149,11 @@ jint JPJavaEnv::PushLocalFrame(jint i)
 jobject JPJavaEnv::PopLocalFrame(jobject obj)
 {
   JNIEnv* env = getJNIEnv();
-	if (env != NULL)
+	if (env != nullptr)
 	{
 		return env->functions->PopLocalFrame(env, obj);
 	}
-	return NULL;
+	return nullptr;
 }
 
 void JPJavaEnv::DeleteLocalRef(jobject obj)
@@ -161,7 +161,7 @@ void JPJavaEnv::DeleteLocalRef(jobject obj)
 	MTRACE_IN("JPJavaEnv::DeleteLocalRef");
 	MTRACE1((long)obj);
 	JNIEnv* env = getJNIEnv();
-	if (env != NULL)
+	if (env != nullptr)
 	{
 		env->functions->DeleteLocalRef(env, obj);
 	}
@@ -173,7 +173,7 @@ void JPJavaEnv::DeleteGlobalRef(jobject obj)
 	MTRACE_IN("JPJavaEnv::DeleteGlobalRef");
 	MTRACE1((long)obj);
 	JNIEnv* env = getJNIEnv();
-	if (env != NULL)
+	if (env != nullptr)
 	{
 		env->functions->DeleteGlobalRef(env, obj);
 	}
@@ -207,7 +207,7 @@ jobject JPJavaEnv::NewGlobalRef(jobject a0)
 bool JPJavaEnv::ExceptionCheck()
 {
 	JNIEnv* env = getJNIEnv();
-	if (env != NULL)
+	if (env != nullptr)
 	{
 		return (env->functions->ExceptionCheck(env) ? true : false);
 	}
@@ -223,7 +223,7 @@ void JPJavaEnv::ExceptionDescribe()
 void JPJavaEnv::ExceptionClear()
 {
 	JNIEnv* env = getJNIEnv();
-	if (env != NULL)
+	if (env != nullptr)
 	{
 		env->functions->ExceptionClear(env);
 	}
@@ -233,7 +233,7 @@ jint JPJavaEnv::AttachCurrentThread()
 {
 	// TODO find a way to get A JVM once JPJavaEnv is not a singleton anymore ...
 	JNIEnv* env;
-	jint res = jvm->functions->AttachCurrentThread(jvm, (void**)&env, NULL);
+	jint res = jvm->functions->AttachCurrentThread(jvm, (void**)&env, nullptr);
 	JAVA_CHECK("AttachCurrentThread");
 	return res;
 }
@@ -242,14 +242,14 @@ jint JPJavaEnv::AttachCurrentThreadAsDaemon()
 {
 	// TODO find a way to get A JVM once JPJavaEnv is not a singleton anymore ...
 	JNIEnv* env;
-	jint res = jvm->functions->AttachCurrentThreadAsDaemon(jvm, (void**)&env, NULL);
+	jint res = jvm->functions->AttachCurrentThreadAsDaemon(jvm, (void**)&env, nullptr);
 	JAVA_CHECK("AttachCurrentThreadAsDaemon");
 	return res;
 }
 
 bool JPJavaEnv::isThreadAttached()
 {
-	return JPEnv::getJava()->getJNIEnv() != NULL;
+	return JPEnv::getJava()->getJNIEnv() != nullptr;
 }
 
 
@@ -261,9 +261,9 @@ jint JPJavaEnv::DetachCurrentThread()
 
 jint JPJavaEnv::GetEnv(JNIEnv** env)
 {
-	if (jvm == NULL)
+	if (jvm == nullptr)
 	{
-		*env = NULL;
+		*env = nullptr;
 		return JNI_EDETACHED;
 	}
 
@@ -324,7 +324,7 @@ jobject JPJavaEnv::NewObjectA(jclass a0, jmethodID a1, jvalue* a2)
 
 	if (ExceptionCheck())
 	{
-		res = NULL;
+		res = nullptr;
 	}
 
   JPEnv::getHost()->returnExternal(_save);

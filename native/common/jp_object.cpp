@@ -35,7 +35,7 @@ JPObject::~JPObject()
 
 JCharString JPObject::toString()
 {
-	if (m_Object == NULL)
+	if (m_Object == nullptr)
 	{
 		static const char* value = "null";
 		jchar res[5];
@@ -64,14 +64,14 @@ HostRef* JPObject::getAttribute(const string& name)
 	
 	// instance fields ...
 	JPField* fld = m_Class->getInstanceField(name);	
-	if (fld != NULL)
+	if (fld != nullptr)
 	{
 		return fld->getAttribute(m_Object);
 	}
 	
 	// static fields ...
 	fld = m_Class->getStaticField(name);
-	if (fld != NULL)
+	if (fld != nullptr)
 	{
 		return fld->getStaticAttribute();
 	}
@@ -79,7 +79,7 @@ HostRef* JPObject::getAttribute(const string& name)
 	JPEnv::getHost()->setAttributeError(name.c_str());
 	JPEnv::getHost()->raise("getAttribute");
 
-	return NULL; // never reached ...
+	return nullptr; // never reached ...
 	
 	TRACE_OUT;
 }
@@ -88,7 +88,7 @@ void JPObject::setAttribute(const string& name, HostRef* val)
 {
 	// instance fields ...
 	JPField* fld = m_Class->getInstanceField(name);	
-	if (fld != NULL)
+	if (fld != nullptr)
 	{
 		fld->setAttribute(m_Object, val);
 		return;
@@ -96,7 +96,7 @@ void JPObject::setAttribute(const string& name, HostRef* val)
 	
 	// static fields ...
 	fld = m_Class->getStaticField(name);
-	if (fld != NULL)
+	if (fld != nullptr)
 	{
 		fld->setStaticAttribute(val);
 		return;

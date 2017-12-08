@@ -66,7 +66,7 @@ private :
 	map<string, JPMethodOverload> m_Overloads;
 
 	struct OverloadData {
-		OverloadData(JPMethodOverload* o) : m_Overload(o) {}
+		explicit OverloadData(JPMethodOverload* o) : m_Overload(o) {}
 
 		JPMethodOverload*              m_Overload;
 		std::vector<JPMethodOverload*> m_MoreSpecificOverloads;

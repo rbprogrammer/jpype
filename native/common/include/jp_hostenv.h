@@ -21,7 +21,8 @@ class HostRef
 {
 public :
 	HostRef(void* data, bool acquire);
-	HostRef(void* data);
+
+	explicit HostRef(void* data);
 	virtual ~HostRef();
 	HostRef(const HostRef&);
 	HostRef& operator=(const HostRef&);
@@ -49,7 +50,7 @@ class JPProxy;
 class HostEnvironment
 {
 public :
-	virtual ~HostEnvironment() {}
+	virtual ~HostEnvironment() = default;
 
 	virtual void* acquireRef(void*) = 0;
 	virtual void releaseRef(void*) = 0;

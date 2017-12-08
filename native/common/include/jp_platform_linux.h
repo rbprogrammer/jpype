@@ -38,7 +38,7 @@ public :
 		jvmLibrary = dlopen(path, RTLD_LAZY|RTLD_GLOBAL);
 #endif // HPUX
 
-		if (jvmLibrary == NULL)
+		if (jvmLibrary == nullptr)
 		{
 			std::stringstream msg;
 			msg << "Unable to load DLL [" << path << "], error = " << dlerror();

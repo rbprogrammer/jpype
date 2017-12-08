@@ -15,8 +15,8 @@
    
 *****************************************************************************/   
 #include <jpype.h>
-
-
+#include <pybind11/pytypes.h>
+namespace py = pybind11;
 
 JPArrayClass::JPArrayClass(const JPTypeName& tname, jclass c) :
 	JPClassBase(tname, c)
@@ -25,16 +25,14 @@ JPArrayClass::JPArrayClass(const JPTypeName& tname, jclass c) :
 	m_ComponentType = JPTypeManager::getType(compname);
 }
 
-JPArrayClass::~JPArrayClass()
-{
-}
+JPArrayClass::~JPArrayClass() = default;
 
-EMatchType JPArrayClass::canConvertToJava(HostRef* o)
+EMatchType JPArrayClass::canConvertToJava(py::object o)
 {
 	TRACE_IN("JPArrayClass::canConvertToJava");
 	JPLocalFrame frame;
 	
-	if (JPEnv::getHost()->isNone(o))
+	if (o.is_none())
 	{
 		return _implicit;
 	}
@@ -90,12 +88,12 @@ EMatchType JPArrayClass::canConvertToJava(HostRef* o)
 	TRACE_OUT;
 }
 
-HostRef* JPArrayClass::asHostObject(jvalue val)
+py::object JPArrayClass::asHostObject(jvalue val)
 {
 	TRACE_IN("JPArrayClass::asHostObject")
-	if (val.l == NULL)
+	if (val.l == nullptr)
 	{
-		return JPEnv::getHost()->getNone();
+		return py::none;
 	}
 	return JPEnv::getHost()->newArray(new JPArray(m_Name, (jarray)val.l));
 	TRACE_OUT;

@@ -18,8 +18,8 @@
 
 JPMethodOverload::JPMethodOverload()
 {
-	m_Method = NULL;
-	m_ReturnTypeCache = NULL;
+	m_Method = nullptr;
+	m_ReturnTypeCache = nullptr;
 }
 
 JPMethodOverload::JPMethodOverload(const JPMethodOverload& o) :
@@ -33,14 +33,14 @@ JPMethodOverload::JPMethodOverload(const JPMethodOverload& o) :
 	m_IsConstructor(o.m_IsConstructor)
 {
 	m_Method = JPEnv::getJava()->NewGlobalRef(o.m_Method);
-	m_ReturnTypeCache = NULL;
+	m_ReturnTypeCache = nullptr;
 }
 
 JPMethodOverload::JPMethodOverload(JPClass* claz, jobject mth)
 {
 	m_Class = claz;
 	m_Method = JPEnv::getJava()->NewGlobalRef(mth);
-	m_ReturnTypeCache = NULL;
+	m_ReturnTypeCache = nullptr;
 
 	// static
 	m_IsStatic = JPJni::isMemberStatic(m_Method);
@@ -78,9 +78,8 @@ string JPMethodOverload::getSignature()
 	
 	res << "(";
 	
-	for (vector<JPTypeName>::iterator it = m_Arguments.begin(); it != m_Arguments.end(); it++)
-	{
-		res << it->getNativeName();
+	for (auto &m_Argument : m_Arguments) {
+		res << m_Argument.getNativeName();
 	}
 	
 	res << ")" ;
@@ -95,8 +94,7 @@ string JPMethodOverload::getArgumentString()
 	res << "(";
 	
 	bool first = true;
-	for (vector<JPTypeName>::iterator it = m_Arguments.begin(); it != m_Arguments.end(); it++)
-	{
+	for (auto &m_Argument : m_Arguments) {
 		if (! first)
 		{
 			res << ", ";
@@ -105,7 +103,7 @@ string JPMethodOverload::getArgumentString()
 		{
 			first = false;
 		}
-		res << it->getSimpleName();
+		res << m_Argument.getSimpleName();
 	}
 	
 	res << ")";
@@ -152,7 +150,7 @@ bool JPMethodOverload::isSameOverload(JPMethodOverload& o)
 EMatchType matchVars(vector<HostRef*>& arg, size_t start, JPType* vartype)
 {
 	TRACE_IN("JPMethodOverload::matchVars");
-	JPArrayClass* arraytype = (JPArrayClass*) vartype;
+	auto * arraytype = (JPArrayClass*) vartype;
 	JPType* type = arraytype->getComponentType();
 	size_t len = arg.size();
 
@@ -291,7 +289,7 @@ void JPMethodOverload::packArgs(JPMallocCleaner<jvalue>& v, vector<HostRef*>& ar
 	{
 		TRACE1("Pack array");
 		len = arg.size();
-		JPArrayClass* type = (JPArrayClass*) m_ArgumentsTypeCache[tlen-1];
+		auto * type = (JPArrayClass*) m_ArgumentsTypeCache[tlen-1];
 		v[tlen-1-skip] = type->convertToJavaVector(arg, tlen-1, len);
 	}
 	TRACE_OUT;
@@ -371,15 +369,14 @@ string JPMethodOverload::matchReport(vector<HostRef*>& args)
 	res << m_ReturnType.getNativeName() << " (";
 
 	bool isFirst = true;
-	for (vector<JPTypeName>::iterator it = m_Arguments.begin(); it != m_Arguments.end(); it++)
-	{
+	for (auto &m_Argument : m_Arguments) {
 		if (isFirst && ! isStatic())
 		{
 			isFirst = false;
 			continue;
 		}
 		isFirst = false;
-		res << it->getNativeName();
+		res << m_Argument.getNativeName();
 	}
 	
 	res << ") ==> ";
@@ -443,9 +440,8 @@ void JPMethodOverload::ensureTypeCache() const
 	}
 	// There was a bug in the previous condition, best to be safe and clear list
 	m_ArgumentsTypeCache.clear(); 
-	for (size_t i = 0; i < m_Arguments.size(); ++i) 
-	{
-		m_ArgumentsTypeCache.push_back(JPTypeManager::getType(m_Arguments[i]));
+	for (const auto &m_Argument : m_Arguments) {
+		m_ArgumentsTypeCache.push_back(JPTypeManager::getType(m_Argument));
 	}
 	if (!m_IsConstructor) 
 	{

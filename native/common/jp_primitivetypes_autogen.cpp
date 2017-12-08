@@ -84,8 +84,8 @@ setViaBuffer(jarray array, int start, uint length, PyObject* sequence, setFnc se
         RAISE(JPypeException, ss.str());
     }
 
-    jarraytype a = (jarraytype)array;
-    jelementtype* buffer = (jelementtype*) py_buff->buf;
+    auto a = (jarraytype)array;
+    auto * buffer = (jelementtype*) py_buff->buf;
     JPJavaEnv* env = JPEnv::getJava();
 
     try {
@@ -120,9 +120,9 @@ template<typename jtype, typename py_wrapper_func>
 inline PyObject* getSlice(jarray array, int lo, int hi, int npy_type,
         py_wrapper_func convert)
 {
-    jtype* val = NULL;
+    jtype* val = nullptr;
     jboolean isCopy;
-    PyObject* res = NULL;
+    PyObject* res = nullptr;
     uint len = hi - lo;
 
     try
@@ -149,7 +149,7 @@ inline PyObject* getSlice(jarray array, int lo, int hi, int npy_type,
         }
         return res;
     }
-    RETHROW_CATCH(if (val != NULL) { JPEnv::getJava()->ReleasePrimitiveArrayCritical(array, val, JNI_ABORT); });
+    RETHROW_CATCH(if (val != nullptr) { JPEnv::getJava()->ReleasePrimitiveArrayCritical(array, val, JNI_ABORT); });
 }
 
 jarray JPByteType::newArrayInstance(int sz)
@@ -202,7 +202,7 @@ void JPByteType::setInstanceValue(jobject c, jfieldID fid, HostRef* obj)
 vector<HostRef*> JPByteType::getArrayRange(jarray a, int start, int length)
 {
     jbyteArray array = (jbyteArray)a;
-    jbyte* val = NULL;
+    jbyte* val = nullptr;
     jboolean isCopy;
     
     try {
@@ -220,13 +220,13 @@ vector<HostRef*> JPByteType::getArrayRange(jarray a, int start, int length)
         
         return res;
     }
-    RETHROW_CATCH( if (val != NULL) { JPEnv::getJava()->ReleaseByteArrayElements(array, val, JNI_ABORT); } );
+    RETHROW_CATCH( if (val != nullptr) { JPEnv::getJava()->ReleaseByteArrayElements(array, val, JNI_ABORT); } );
 }
 
 void JPByteType::setArrayRange(jarray a, int start, int length, vector<HostRef*>& vals)
 {
     jbyteArray array = (jbyteArray)a;
-    jbyte* val = NULL;
+    jbyte* val = nullptr;
     jboolean isCopy;
 
     try {
@@ -240,7 +240,7 @@ void JPByteType::setArrayRange(jarray a, int start, int length, vector<HostRef*>
         }
         JPEnv::getJava()->ReleaseByteArrayElements(array, val, 0);        
     }
-    RETHROW_CATCH( if (val != NULL) { JPEnv::getJava()->ReleaseByteArrayElements(array, val, JNI_ABORT); } );
+    RETHROW_CATCH( if (val != nullptr) { JPEnv::getJava()->ReleaseByteArrayElements(array, val, JNI_ABORT); } );
 }
 
 void JPByteType::setArrayRange(jarray a, int start, int length, PyObject* sequence)
@@ -250,26 +250,26 @@ void JPByteType::setArrayRange(jarray a, int start, int length, PyObject* sequen
         return;
 
     jbyteArray array = (jbyteArray)a;
-    jbyte* val = NULL;
+    jbyte* val = nullptr;
     jboolean isCopy;
 
     try {
         val = JPEnv::getJava()->GetByteArrayElements(array, &isCopy);
         for (Py_ssize_t i = 0; i < length; ++i) {
             PyObject* o = PySequence_GetItem(sequence, i);
-            jbyte l = (jbyte) PyInt_AS_LONG(o);
+            auto l = (jbyte) PyInt_AS_LONG(o);
             Py_DECREF(o);
             if(l == -1) { CONVERSION_ERROR_HANDLE; }
             val[start+i] = l;
         }
         JPEnv::getJava()->ReleaseByteArrayElements(array, val, 0);
     }
-    RETHROW_CATCH( if (val != NULL) { JPEnv::getJava()->ReleaseByteArrayElements(array, val, JNI_ABORT); } );
+    RETHROW_CATCH( if (val != nullptr) { JPEnv::getJava()->ReleaseByteArrayElements(array, val, JNI_ABORT); } );
 }
 
 HostRef* JPByteType::getArrayItem(jarray a, int ndx)
 {
-    jbyteArray array = (jbyteArray)a;
+    auto array = (jbyteArray)a;
     jbyte val;
     
     try {
@@ -284,7 +284,7 @@ HostRef* JPByteType::getArrayItem(jarray a, int ndx)
 
 void JPByteType::setArrayItem(jarray a, int ndx, HostRef* obj)
 {
-    jbyteArray array = (jbyteArray)a;
+    auto array = (jbyteArray)a;
     
     try {
         jbyte val = convertToJava(obj).b;

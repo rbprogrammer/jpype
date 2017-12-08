@@ -16,43 +16,7 @@
 *****************************************************************************/   
 #ifndef _PYCLASS_H_
 #define _PYCLASS_H_
-
-struct PyJPClass
-{
-	//AT's comments on porting:
-	//  1) Some Unix compilers do not tolerate the semicolumn after PyObject_HEAD	
-	//PyObject_HEAD;
-	PyObject_HEAD
-	
-	// Python-visible methods
-	static void         initType(PyObject* module);
-	static PyJPClass*   alloc(JPClass* cls);
-	static bool   check(PyObject* o);
-
-	static void        __dealloc__(PyObject* o);
-
-	static PyObject* getName(PyObject* self, PyObject* arg);
-	static PyObject* getBaseClass(PyObject* self, PyObject* arg);
-	static PyObject* getBaseInterfaces(PyObject* self, PyObject* arg);
-	static PyObject* getClassMethods(PyObject* self, PyObject* arg);
-	static PyObject* getClassFields(PyObject* self, PyObject* arg);
-	static PyObject* newClassInstance(PyObject* self, PyObject* arg);
-	static PyObject* isInterface(PyObject* self, PyObject* arg);
-	static PyObject* isPrimitive(PyObject* self, PyObject* arg);
-	static PyObject* isSubclass(PyObject* self, PyObject* arg);
-	static PyObject* isException(PyObject* self, PyObject* arg);
-	static PyObject* isArray(PyObject* self, PyObject* arg);
-	static PyObject* isAbstract(PyObject* self, PyObject* arg);
-
-	static PyObject* getConstructors(PyObject* self);
-	static PyObject* getDeclaredConstructors(PyObject* self);
-	static PyObject* getDeclaredFields(PyObject* self);
-	static PyObject* getDeclaredMethods(PyObject* self);
-	static PyObject* getFields(PyObject* self);
-	static PyObject* getMethods(PyObject* self);
-	static PyObject* getModifiers(PyObject* self);
-
-	JPClass* m_Class;
-};
+namespace py {class module;}
+void exportClass(py::module&);
 
 #endif // _PYCLASS_H_

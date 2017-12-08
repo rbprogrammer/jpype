@@ -56,15 +56,19 @@ public :
 		return m_Class;
 	}
 
-	map<string, JPField*>& getStaticFields()
+	map<string, JPField*>& getStaticFields() const
 	{
 		return m_StaticFields;
 	}
 	
-	map<string, JPField*>& getInstanceFields()
+	map<string, JPField*>& getInstanceFields() const
 	{
 		return m_InstanceFields;
 	}
+
+	map<string, JPField*> getClassFields() const {
+
+	};
 
 	bool isFinal();
 	bool isAbstract();
@@ -79,6 +83,18 @@ public :
 	bool isSubclass(JPClass*);
 	
 	string describe();
+
+	bool isPrimitive() const {
+		return ! getObjectType().isObjectType();
+	}
+
+	bool isArray() const {
+		return getObjectType().getNativeName()[0] == '[';
+	}
+
+	bool isInterface() const {
+
+	}
 
 public : // JPType implementation
 	virtual HostRef*   asHostObject(jvalue val);

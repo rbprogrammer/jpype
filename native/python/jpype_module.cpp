@@ -253,7 +253,7 @@ PyObject* JPypeModule::isThreadAttached(PyObject* obj)
 	if (! JPEnv::isInitialized())
 	{
 		PyErr_SetString(PyExc_RuntimeError, "Java Subsystem not started");
-		return NULL;
+		return nullptr;
 	}
 
 	try {
@@ -265,7 +265,7 @@ PyObject* JPypeModule::isThreadAttached(PyObject* obj)
 	}
 	PY_STANDARD_CATCH;
 
-	return NULL;
+	return nullptr;
 
 }
 

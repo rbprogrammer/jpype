@@ -17,16 +17,21 @@
 #ifndef _PYFIELD_H_
 #define _PYFIELD_H_
 
-struct PyJPField
+#include <pybind11/pybind11.h>
+namespace  py = pybind11;
+/**
+//TODO: this can be a pybind class?
+// eg. class PyJPField: public py::object?
+class PyJPField : public py::object
 {
-	PyObject_HEAD
-	
+	//PyObject_HEAD
+public:
 	// Python-visible methods
 	static void         initType(PyObject* module);
 	static PyJPField*   alloc(JPField* mth);
 
-	static void         __dealloc__(PyObject* o);
-	static PyObject*    getName(PyObject* self, PyObject* arg);
+	//static void         __dealloc__(PyObject* o);
+	PyObject*    getName(PyObject* arg);
 	static PyObject* getStaticAttribute(PyObject* self, PyObject* arg);
 	static PyObject* setStaticAttribute(PyObject* self, PyObject* arg);
 	static PyObject* setInstanceAttribute(PyObject* self, PyObject* arg);
@@ -37,5 +42,7 @@ struct PyJPField
 
 	JPField* m_Field;
 };
+*/
 
+void exportField(py::module&);
 #endif // _PYFIELD_H_

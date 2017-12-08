@@ -26,10 +26,8 @@ protected :
 	{
 	}
 	
-	virtual ~JPObjectType()
-	{
-	}
-	
+	virtual ~JPObjectType() = default;
+
 public :
 	virtual const JPTypeName& getName() const
 	{
@@ -89,9 +87,7 @@ public :
 	{
 	}
 	
-	virtual ~JPStringType()
-	{
-	}
+	virtual ~JPStringType() = default;
 
 protected :
 	virtual jclass    getClass() const;

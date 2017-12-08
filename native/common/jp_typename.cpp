@@ -28,14 +28,11 @@ static string convertToNativeClassName(const string& str)
 	
 	// native names are of the form :
 	//   La/c/d/E;
-	
-	string name = str;
-	string result = string("L")+name+";";
-	for (unsigned int j = 0; j < result.length(); j++)
-	{
-		if (result[j] == '.') 
+	string result = string("L")+str+";";
+	for (char &j : result) {
+		if (j == '.')
 		{
-			result[j] = '/';
+			j = '/';
 		}
 	}
 	
@@ -66,9 +63,8 @@ void JPTypeName::init()
 	definedTypes["java.lang.String"] = _string;
 	definedTypes["java.lang.Class"] = _class;
 
-	for (DefinedTypesMap::iterator it = definedTypes.begin(); it != definedTypes.end(); ++it)
-	{
-		nativeTypes[it->second] = it->first;
+	for (auto &definedType : definedTypes) {
+		nativeTypes[definedType.second] = definedType.first;
 	}
 
 }
@@ -98,8 +94,8 @@ JPTypeName JPTypeName::fromSimple(const char* name)
 		componentName = simple.substr(0, i+1);
 		arrayDimCount = (simple.length() - componentName.length())/2;
 	}
-	
-	NativeNamesMap::iterator nativeIt = nativeNames.find(componentName);
+
+	auto nativeIt = nativeNames.find(componentName);
 	if (nativeIt == nativeNames.end())
 	{
 		nativeComponent = convertToNativeClassName(componentName);		
@@ -124,8 +120,8 @@ JPTypeName JPTypeName::fromSimple(const char* name)
 	{
 		native = nativeComponent;
 	}
-	
-	DefinedTypesMap::iterator typeIt = definedTypes.find(name);
+
+	auto typeIt = definedTypes.find(name);
 	if (typeIt == definedTypes.end())
 	{
 		if (native[0] == '[') 

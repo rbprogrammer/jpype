@@ -112,7 +112,7 @@ void JPObjectType::setInstanceValue(jobject c, jfieldID fid, HostRef* obj)
 
 jarray JPObjectType::newArrayInstance(int sz)
 {
-	return JPEnv::getJava()->NewObjectArray(sz, getClass(), NULL);
+	return JPEnv::getJava()->NewObjectArray(sz, getClass(), nullptr);
 }
 
 vector<HostRef*> JPObjectType::getArrayRange(jarray a, int start, int length)
@@ -172,7 +172,7 @@ HostRef* JPObjectType::getArrayItem(jarray a, int ndx)
 	
 	jobject obj = JPEnv::getJava()->GetObjectArrayElement(array, ndx);
 	
-	if (obj == NULL)
+	if (obj == nullptr)
 	{
 		return JPEnv::getHost()->getNone();
 	}
@@ -226,12 +226,12 @@ HostRef* JPStringType::asHostObject(jvalue val)
 {
 	TRACE_IN("JPStringType::asHostObject");
 	
-	if (val.l == NULL)
+	if (val.l == nullptr)
 	{
 		return JPEnv::getHost()->getNone();
 	}
-	
-	jstring v = (jstring)val.l;
+
+	auto v = (jstring)val.l;
 
 	if (JPEnv::getJava()->getConvertStringObjects())
 	{
@@ -262,7 +262,7 @@ EMatchType JPStringType::canConvertToJava(HostRef* obj)
 	TRACE_IN("JPStringType::canConvertToJava");
 	JPLocalFrame frame;
 
-	if (obj == NULL || JPEnv::getHost()->isNone(obj))
+	if (obj == nullptr || JPEnv::getHost()->isNone(obj))
 	{
 		return _implicit;
 	}
@@ -303,7 +303,7 @@ jvalue JPStringType::convertToJava(HostRef* obj)
 	
 	if (JPEnv::getHost()->isNone(obj))
 	{
-		v.l = NULL;
+		v.l = nullptr;
 		return v;
 	}
 	

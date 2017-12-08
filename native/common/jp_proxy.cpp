@@ -30,17 +30,17 @@ JNIEXPORT jobject JNICALL Java_jpype_JPypeInvocationHandler_hostInvoke(
 	try {
 		string cname = JPJni::asciiFromJava(name);
 
-		HostRef* hostObjRef = (HostRef*)hostObj;
+		auto * hostObjRef = (HostRef*)hostObj;
 
 		HostRef* callable = JPEnv::getHost()->getCallableFrom(hostObjRef, cname);
 		cleaner.add(callable);
 
 		// If method can't be called, throw an exception
-		if (callable == NULL || callable->isNull() || JPEnv::getHost()->isNone(callable))
+		if (callable == nullptr || callable->isNull() || JPEnv::getHost()->isNone(callable))
 		{
 			JPEnv::getJava()->ThrowNew(JPJni::s_NoSuchMethodErrorClass, cname.c_str());
 			JPEnv::getHost()->prepareCallbackFinish(callbackState);
-			return NULL;
+			return nullptr;
 		}
 					
 		// convert the arguments into a python list
@@ -49,7 +49,7 @@ JNIEXPORT jobject JNICALL Java_jpype_JPypeInvocationHandler_hostInvoke(
 
 		for (int i = 0; i < argLen; i++)
 		{
-			jclass c = (jclass)JPEnv::getJava()->GetObjectArrayElement(types, i);
+			auto c = (jclass)JPEnv::getJava()->GetObjectArrayElement(types, i);
 			JPTypeName t = JPJni::getName(c);
 
 			jobject obj = JPEnv::getJava()->GetObjectArrayElement(args, i);
@@ -68,20 +68,20 @@ JNIEXPORT jobject JNICALL Java_jpype_JPypeInvocationHandler_hostInvoke(
 
 		JPTypeName returnT = JPJni::getName(returnType);
 
-		if (returnValue == NULL || returnValue->isNull() || JPEnv::getHost()->isNone(returnValue))
+		if (returnValue == nullptr || returnValue->isNull() || JPEnv::getHost()->isNone(returnValue))
 		{
 			if (returnT.getType() != JPTypeName::_void && returnT.getType() < JPTypeName::_object)
 			{
 				JPEnv::getJava()->ThrowNew(JPJni::s_RuntimeExceptionClass, "Return value is None when it cannot be");
 				JPEnv::getHost()->prepareCallbackFinish(callbackState);
-				return NULL;
+				return nullptr;
 			}
 		}
 
 		if (returnT.getType() == JPTypeName::_void)
 		{
 			JPEnv::getHost()->prepareCallbackFinish(callbackState);
-			return NULL;
+			return nullptr;
 		}
 
 		JPType* rt = JPTypeManager::getType(returnT);
@@ -89,7 +89,7 @@ JNIEXPORT jobject JNICALL Java_jpype_JPypeInvocationHandler_hostInvoke(
 		{
 			JPEnv::getJava()->ThrowNew(JPJni::s_RuntimeExceptionClass, "Return value is not compatible with required type.");
 			JPEnv::getHost()->prepareCallbackFinish(callbackState);
-			return NULL;
+			return nullptr;
 		}
 	
 		jobject returnObj = rt->convertToJavaObject(returnValue);
@@ -131,7 +131,7 @@ JNIEXPORT jobject JNICALL Java_jpype_JPypeInvocationHandler_hostInvoke(
 
 	JPEnv::getHost()->prepareCallbackFinish(callbackState);
 
-	return NULL;
+	return nullptr;
 
 	TRACE_OUT;
 }
@@ -145,7 +145,7 @@ JNIEXPORT void JNICALL Java_jpype_ref_JPypeReferenceQueue_removeHostReference(
 
 	if (hostObj >0)
 	{
-		HostRef* hostObjRef = (HostRef*)hostObj;
+		auto * hostObjRef = (HostRef*)hostObj;
 		//JPEnv::getHost()->printReferenceInfo(hostObjRef);
 		delete hostObjRef;
 	}
@@ -212,7 +212,7 @@ JPProxy::JPProxy(HostRef* inst, vector<jclass>& intf)
 	JPLocalFrame frame;
 	m_Instance = inst->copy();
 	
-	jobjectArray ar = JPEnv::getJava()->NewObjectArray((int)intf.size(), JPJni::s_ClassClass, NULL);
+	jobjectArray ar = JPEnv::getJava()->NewObjectArray((int)intf.size(), JPJni::s_ClassClass, nullptr);
 	m_Interfaces = (jobjectArray)JPEnv::getJava()->NewGlobalRef(ar);
 
 	for (unsigned int i = 0; i < intf.size(); i++)
@@ -228,16 +228,15 @@ JPProxy::JPProxy(HostRef* inst, vector<jclass>& intf)
 
 JPProxy::~JPProxy()
 {
-	if (m_Instance != NULL)
+	if (m_Instance != nullptr)
 	{
 		m_Instance->release();
 	}
 	JPEnv::getJava()->DeleteGlobalRef(m_Handler);
 	JPEnv::getJava()->DeleteGlobalRef(m_Interfaces);
 
-	for (unsigned int i = 0; i < m_InterfaceClasses.size(); i++)
-	{
-		JPEnv::getJava()->DeleteGlobalRef(m_InterfaceClasses[i]);
+	for (auto &m_InterfaceClasse : m_InterfaceClasses) {
+		JPEnv::getJava()->DeleteGlobalRef(m_InterfaceClasse);
 	}
 
 }

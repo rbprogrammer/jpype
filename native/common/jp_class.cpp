@@ -18,8 +18,8 @@
 
 JPClass::JPClass(const JPTypeName& n, jclass c) :
 	JPClassBase(n, c),
-	m_SuperClass(NULL),
-	m_Constructors(NULL)
+	m_SuperClass(nullptr),
+	m_Constructors(nullptr)
 {
 }
 
@@ -30,19 +30,16 @@ JPClass::~JPClass()
 	// interfaces of this cannot be simply deleted here, since they may be also
 	// super types of other classes, which would be invalidated by doing so.
 
-	for (map<string, JPMethod*>::iterator mthit = m_Methods.begin(); mthit != m_Methods.end(); mthit ++)
-	{
-		delete mthit->second;
+	for (auto &m_Method : m_Methods) {
+		delete m_Method.second;
 	}
 
-	for (map<string, JPField*>::iterator fldit = m_InstanceFields.begin(); fldit != m_InstanceFields.end(); fldit++)
-	{
-		delete fldit->second;
+	for (auto &m_InstanceField : m_InstanceFields) {
+		delete m_InstanceField.second;
 	}
 
-	for (map<string, JPField*>::iterator fldit2 = m_StaticFields.begin(); fldit2 != m_StaticFields.end(); fldit2++)
-	{
-		delete fldit2->second;
+	for (auto &m_StaticField : m_StaticFields) {
+		delete m_StaticField.second;
 	}
 
 }
@@ -71,7 +68,7 @@ void JPClass::loadSuperClass()
 	{
 		jclass baseClass = JPEnv::getJava()->GetSuperclass(m_Class);
 
-		if (baseClass != NULL)
+		if (baseClass != nullptr)
 		{
 			JPTypeName baseClassName = JPJni::getName(baseClass);
 			m_SuperClass = JPTypeManager::findClass(baseClassName);
@@ -87,9 +84,8 @@ void JPClass::loadSuperInterfaces()
 	// Super interfaces
 	vector<jclass> intf = JPJni::getInterfaces(frame, m_Class);
 
-	for (vector<jclass>::iterator it = intf.begin(); it != intf.end(); it++)
-	{
-		JPTypeName intfName = JPJni::getName(*it);
+	for (auto &it : intf) {
+		JPTypeName intfName = JPJni::getName(it);
 		JPClass* interface = JPTypeManager::findClass(intfName);
 		m_SuperInterfaces.push_back(interface);
 	}
@@ -103,9 +99,8 @@ void JPClass::loadFields()
 	// fields
 	vector<jobject> fields = JPJni::getDeclaredFields(frame, m_Class);
 
-	for (vector<jobject>::iterator it = fields.begin(); it != fields.end(); it++)
-	{
-		JPField* field = new JPField(this, *it);
+	for (auto &it : fields) {
+		JPField* field = new JPField(this, it);
 		if (field->isStatic())
 		{
 			m_StaticFields[field->getName()] = field;
@@ -126,17 +121,16 @@ void JPClass::loadMethods()
 	// methods
 	vector<jobject> methods = JPJni::getMethods(frame, m_Class);
 
-	for (vector<jobject>::iterator it = methods.begin(); it != methods.end(); it++)
-	{
-		const string& name = JPJni::getMemberName(*it);
+	for (auto &it : methods) {
+		const string& name = JPJni::getMemberName(it);
 		JPMethod* method = getMethod(name);
-		if (method == NULL)
+		if (method == nullptr)
 		{
 			method = new JPMethod(m_Class, name, false);
 			m_Methods[name] = method;
 		}
 
-		method->addOverload(this, *it);
+		method->addOverload(this, it);
 	}
 	TRACE_OUT;
 }
@@ -156,11 +150,10 @@ void JPClass::loadConstructors()
 
 	vector<jobject> methods = JPJni::getDeclaredConstructors(frame, m_Class);
 
-	for (vector<jobject>::iterator it = methods.begin(); it != methods.end(); it++)
-	{
-		if (JPJni::isMemberPublic(*it))
+	for (auto &method : methods) {
+		if (JPJni::isMemberPublic(method))
 		{
-			m_Constructors->addOverload(this, *it);
+			m_Constructors->addOverload(this, method);
 		}
 	}
 	TRACE_OUT;
@@ -168,20 +161,20 @@ void JPClass::loadConstructors()
 
 JPField* JPClass::getInstanceField(const string& name)
 {
-	map<string, JPField*>::iterator it = m_InstanceFields.find(name);
+	auto it = m_InstanceFields.find(name);
 	if (it == m_InstanceFields.end())
 	{
-		return NULL;
+		return nullptr;
 	}
 	return it->second;
 }
 
 JPField* JPClass::getStaticField(const string& name)
 {
-	map<string, JPField*>::iterator it = m_StaticFields.find(name);
+	auto it = m_StaticFields.find(name);
 	if (it == m_StaticFields.end())
 	{
-		return NULL;
+		return nullptr;
 	}
 	return it->second;
 }
@@ -189,10 +182,10 @@ JPField* JPClass::getStaticField(const string& name)
 
 JPMethod* JPClass::getMethod(const string& name)
 {
-	map<string, JPMethod*>::iterator it = m_Methods.find(name);
+	auto it = m_Methods.find(name);
 	if (it == m_Methods.end())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	return it->second;
@@ -201,7 +194,7 @@ JPMethod* JPClass::getMethod(const string& name)
 HostRef* JPClass::getStaticAttribute(const string& name)
 {
 	// static fields
-	map<string, JPField*>::iterator fld = m_StaticFields.find(name);
+	auto fld = m_StaticFields.find(name);
 	if (fld != m_StaticFields.end())
 	{
 		return fld->second->getStaticAttribute();
@@ -209,13 +202,13 @@ HostRef* JPClass::getStaticAttribute(const string& name)
 
 	JPEnv::getHost()->setAttributeError(name.c_str());
 	JPEnv::getHost()->raise("getAttribute");
-	return NULL; // never reached
+	return nullptr; // never reached
 }
 
 HostRef* JPClass::asHostObject(jvalue obj)
 {
 	TRACE_IN("JPClass::asHostObject");
-	if (obj.l == NULL)
+	if (obj.l == nullptr)
 	{
 		return JPEnv::getHost()->getNone();
 	}

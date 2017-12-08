@@ -338,12 +338,8 @@ bool PythonHostEnvironment::isArray(HostRef* ref)
 {
 	PyObject* obj = UNWRAP(ref);
 
-	if (JPyObject::isInstance(obj, m_JavaArrayClass))
-	{
-		return true;
-	}
+	return JPyObject::isInstance(obj, m_JavaArrayClass);
 
-	return false;
 }
 
 HostRef* PythonHostEnvironment::newArray(JPArray* m)

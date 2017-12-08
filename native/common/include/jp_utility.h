@@ -22,7 +22,7 @@
 #define RAISE(exClass, msg) { throw exClass(msg, __FILE__, __LINE__); }
 
 /** Support Exception for JPype-generated exception */
-class JPypeException
+class JPypeException : std::exception
 {
 public :
 	JPypeException(const char* msn, const char* f, int l) 
@@ -43,7 +43,7 @@ public :
 
 	JPypeException(const JPypeException& ex) : file(ex.file), line(ex.line) { this->msg = ex.msg;}
 
-	virtual ~JPypeException() {}
+	virtual ~JPypeException() = default;
 
 	const char* getMsg()
 	{
@@ -94,7 +94,7 @@ private :
 	bool m_Error;
 	
 public :
-	JPypeTracer(const char* name) : m_Name(name)
+	explicit JPypeTracer(const char* name) : m_Name(name)
 	{
 		traceIn(name);
 		m_Error = false;
