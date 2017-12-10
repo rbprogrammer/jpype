@@ -133,7 +133,7 @@ class my_build_ext(build_ext):
 
     # extra compile args
     copt = {'msvc': ['/EHsc'],
-            'unix' : ['-ggdb'],
+            'unix' : ['-ggdb', '-std=c++11'],
             'mingw32' : [],
            }
     # extra link args
