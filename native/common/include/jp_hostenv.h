@@ -17,24 +17,28 @@
 #ifndef _JPHOSTENV_H_
 #define _JPHOSTENV_H_
 
-class HostRef
+#include <pybind11/pytypes.h>
+namespace  py = pybind11;
+
+class HostRef: public py::object
 {
 public :
-	HostRef(void* data, bool acquire);
+	HostRef(void* data, bool acquire) : py::object(py::handle((PyObject*)data))
+    {}
 
 	explicit HostRef(void* data);
-	virtual ~HostRef();
+	//virtual ~HostRef();
 	HostRef(const HostRef&);
 	HostRef& operator=(const HostRef&);
 	
 public :
 	HostRef* copy();
 	void release();
-	bool isNull();		
+	bool isNull();
 	void* data();
 
-private :
-	void* m_HostData;
+//private :
+//	void* m_HostData;
 
 };
 

@@ -62,7 +62,7 @@ template<typename T>
 class JPMallocCleaner
 {
 public :
-	JPMallocCleaner(size_t size)
+	explicit JPMallocCleaner(size_t size)
 	{
 		mData = (T*)malloc(sizeof(T)*size);
 	}

@@ -27,13 +27,14 @@ bool isException(JPClass& clazz)
 }
 
 void exportClass(py::module& m) {
-
+	auto ctor = py::init<>();
 	py::class_<JPClass>(m, "_JavaClass")
+			.def(ctor).
 		.def("getName",              &JPClass::getName)
 		.def("getBaseClass",         &JPClass::getSuperClass)
 		.def("getClassFields",       &JPClass::getClassFields)
 		.def("getClassMethods",      &JPClass::getClassMethods)
-		.def("newClassInstance",     &JPClass::newClassInstance)
+		.def("newClassInstance",     ctor)
 
 		.def("isInterface", &JPClass::isInterface)
 		.def("getBaseInterfaces", &JPClass::getInterfaces)
@@ -140,7 +141,7 @@ PyObject* PyJPClass::newClassInstance(PyObject* o, PyObject* arg)
 	}
 	PY_STANDARD_CATCH
 
-	return NULL;
+	return nullptr;
 }
 
 
