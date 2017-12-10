@@ -43,7 +43,7 @@ platform_specific = {
     'include_dirs': [
         os.path.join('native', 'common', 'include'),
         os.path.join('native', 'python', 'include'),
-        'pybind11',
+        os.path.abspath('pybind11'), 
     ],
     'sources': find_sources(),
 }
